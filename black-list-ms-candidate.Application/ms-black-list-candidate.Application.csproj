@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <RootNamespace>black_list_ms_candidate.Application</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\black-list-ms-candidate.Domain\ms-black-list-candidate.Domain.csproj" />
+    <ProjectReference Include="..\black-list-ms-candidate.Infrastructure\ms-black-list-candidate.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>
