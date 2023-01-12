@@ -1,3 +1,4 @@
+using black_list_ms_candidate.Domain;
 using black_list_ms_candidate.Infrastructure.DbConn;
 using black_list_ms_candidate.Infrastructure.Helpers;
 using black_list_ms_candidate.Infrastructure.Interfaces;
@@ -15,7 +16,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<DbSession>();
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
-builder.Services.AddTransient<CandidateRepository>();
+builder.Services.AddTransient<IRepository<Candidate>, CandidateRepository>();
 
 SqlMapper.AddTypeHandler(new MySqlGuidTypeHandler());
 SqlMapper.RemoveTypeMap(typeof(Guid));

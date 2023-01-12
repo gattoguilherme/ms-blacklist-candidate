@@ -23,14 +23,21 @@ namespace black_list_ms_candidate.Domain
         {
         }
 
-        public Candidate(string name, DateTime bornDate, Guid idMentor, string email)
+        public Candidate(string name, Guid idMentor, string email)
         {
             Id = Guid.NewGuid();
             Name = name;
-            //BornDate = bornDate.GetDateTimeFormats()[5];
             IdMentor = idMentor;
             Email = email;
-            //CreationDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd"));
+            _skills = new List<Skill>();
+        }
+
+        public Candidate(Guid guid, string name, Guid idMentor, string email)
+        {
+            Id = guid;
+            Name = name;
+            IdMentor = idMentor;
+            Email = email;
             _skills = new List<Skill>();
         }
 

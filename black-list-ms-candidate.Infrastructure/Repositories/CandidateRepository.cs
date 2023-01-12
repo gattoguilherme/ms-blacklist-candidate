@@ -1,10 +1,11 @@
 ﻿using black_list_ms_candidate.Domain;
 using black_list_ms_candidate.Infrastructure.DbConn;
+using black_list_ms_candidate.Infrastructure.Interfaces;
 using Dapper;
 
 namespace black_list_ms_candidate.Infrastructure.Repositories
 {
-    public class CandidateRepository// : GenericRepository<Candidate>
+    public class CandidateRepository : IRepository<Candidate>// : GenericRepository<Candidate>
     {
         private DbSession _session;
 
@@ -16,10 +17,10 @@ namespace black_list_ms_candidate.Infrastructure.Repositories
         public void Add(Candidate entity)
         {
             var queryCandidate = $"INSERT INTO CANDIDATES VALUES (\"{entity.Id}\", \"{entity.Name}\", \"{entity.IdMentor}\", \"{entity.Email}\"); SELECT * FROM CANDIDATES WHERE ID=\"{entity.Id}\"";
-            var res = _session.Connection.QuerySingle<Candidate>(queryCandidate, null, _session.Transaction);
-
+            
             try
             {
+                var res = _session.Connection.QuerySingle<Candidate>(queryCandidate, null, _session.Transaction);
                 // checar se skills existem no db, se nao da insert e ja cria relação
                 entity.Skills.ToList().ForEach(s =>
                 {
@@ -44,10 +45,17 @@ namespace black_list_ms_candidate.Infrastructure.Repositories
 
         public void Update(Candidate entity)
         {
-            var query = $"UPDATE CANDIDATES SET NAME = \"{entity.Name}\", IDMENTOR = \"{entity.IdMentor}\", EMAIL = \"{entity.Email}\" WHERE ID = \"{entity.Id}\"";
+            var queryRemoveRelationship = $"DELETE FROM CANDIDATES_SKILLS WHERE ID_CANDIDATE = \"{entity.Id}\";";
+            var queryRemoveCustomer = $"DELETE FROM CANDIDATES WHERE ID = \"{entity.Id}\";";
+            var queryFull = string.Concat(queryRemoveRelationship, queryRemoveCustomer);
+
             try
             {
-                _session.Connection.Execute(query, null, _session.Transaction);
+                // remove all
+                _session.Connection.Execute(queryFull, null, _session.Transaction);
+
+                // add as new customer but with the same guid
+                this.Add(entity);
             }
             catch (Exception e)
             {
@@ -94,7 +102,7 @@ namespace black_list_ms_candidate.Infrastructure.Repositories
 
         }
 
-        public List<Candidate> GetAll()
+        public IList<Candidate> GetAll()
         {
             var query = $"SELECT C.ID, C.NAME, C.IDMENTOR, C.EMAIL, S.ID_SKILL, S.NAME FROM CANDIDATES C LEFT JOIN CANDIDATES_SKILLS CS ON C.ID = CS.ID_CANDIDATE LEFT JOIN SKILLS S ON S.ID_SKILL = CS.ID_SKILL";
             try
@@ -172,11 +180,6 @@ namespace black_list_ms_candidate.Infrastructure.Repositories
             }
 
             return Guid.Empty;
-        }
-
-        public Candidate Update(Candidate entity)
-        {
-
         }
     }
 }

@@ -7,14 +7,12 @@ using System.Threading.Tasks;
 
 namespace black_list_ms_candidate.Infrastructure.Interfaces
 {
-    public interface IRepository<T>
+    public interface IRepository<T> where T : class
     {
-        T Add(T entity);
-        IEnumerable<T> Find(Expression<Func<T, bool>> predicate);
+        void Add(T entity);
         T Get(Guid id);
-        IEnumerable<T> GetAll();
-        void SaveChanges();
-        T Update(T entity);
-        T Delete(Guid id);
+        IList<T> GetAll();
+        void Update(T entity);
+        Guid Delete(Guid id);
     }
 }

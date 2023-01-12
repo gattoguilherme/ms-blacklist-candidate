@@ -12,8 +12,10 @@ namespace black_list_ms_candidate.Domain.Handlers
 {
     public class CandidateHandler : IHandler<CreateCandidateCommand>
     {
-        private readonly CandidateRepository _candidateRepository;
-        public CandidateHandler(CandidateRepository candidateRepository)
+        private readonly IRepository<Candidate> _candidateRepository;
+        public CandidateHandler(IRepository<Candidate> candidateRepository)
+        //private readonly CandidateRepository _candidateRepository;
+        //public CandidateHandler(CandidateRepository candidateRepository)
         {
             _candidateRepository = candidateRepository;
         }
@@ -21,18 +23,16 @@ namespace black_list_ms_candidate.Domain.Handlers
         public ICommandResult Handle(CreateCandidateCommand command)
         {
             var name = command.Name;
-            var bornDate = command.BornDate;
             var email = command.Email;
             var idMentor = command.IdMentor;
 
             try
             {
-                var candidate = new Candidate(name, bornDate, idMentor, email);
+                var candidate = new Candidate(name, idMentor, email);
 
                 if (command.Skills != null)
                     command.Skills.ToList().ForEach(skill => candidate.AddSkill(skill));
 
-                candidate.AddSkill(new Skill(Guid.NewGuid(), "Comedor"));
                 this._candidateRepository.Add(candidate);
 
                 return new CommandResult(true, "Candidate successfully created.");
@@ -77,6 +77,30 @@ namespace black_list_ms_candidate.Domain.Handlers
                 return new CommandResult(false, $"Cannot delete candidate {command.Id }");
 
             return new CommandResult(true, $"Customer {res} succesfully deleted");
+        }
+
+        public ICommandResult Handle(UpdateCandidateCommand command)
+        {
+            var id = command.Id;
+            var name = command.Name;
+            var email = command.Email;
+            var idMentor = command.IdMentor;
+
+            try
+            {
+                var candidate = new Candidate(id, name, idMentor, email);
+
+                if (command.Skills != null)
+                    command.Skills.ToList().ForEach(skill => candidate.AddSkill(skill));
+
+                this._candidateRepository.Update(candidate);
+
+                return new CommandResult(true, "Candidate successfully updated.");
+            }
+            catch (Exception e)
+            {
+                return new CommandResult(false, $"Error on updating new candidate: {e.ToString()}");
+            }
         }
     }
 }

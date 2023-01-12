@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ms-black-list-candidate.App
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ms-black-list-candidate.Infrastructure", "black-list-ms-candidate.Infrastructure\ms-black-list-candidate.Infrastructure.csproj", "{BE51BFC2-04BB-4460-8C55-488212FD8043}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ms-black-list-candidate.Tests", "ms-black-list-candidate.Tests\ms-black-list-candidate.Tests.csproj", "{FCB0CFE1-A245-4E9E-9FBC-670C269298EF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{BE51BFC2-04BB-4460-8C55-488212FD8043}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE51BFC2-04BB-4460-8C55-488212FD8043}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE51BFC2-04BB-4460-8C55-488212FD8043}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FCB0CFE1-A245-4E9E-9FBC-670C269298EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCB0CFE1-A245-4E9E-9FBC-670C269298EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCB0CFE1-A245-4E9E-9FBC-670C269298EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCB0CFE1-A245-4E9E-9FBC-670C269298EF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

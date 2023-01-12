@@ -11,10 +11,10 @@ namespace black_list_ms_candidate.Controllers
     [Route("api/v1/[controller]")]
     public class CandidateController : ControllerBase
     {
-        private readonly CandidateRepository _candidateRepository;
+        private readonly IRepository<Candidate> _candidateRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public CandidateController(CandidateRepository candidateRepository, IUnitOfWork unitOfWork)
+        public CandidateController(IRepository<Candidate> candidateRepository, IUnitOfWork unitOfWork)
         {
             _candidateRepository = candidateRepository;
             _unitOfWork = unitOfWork;
@@ -72,7 +72,6 @@ namespace black_list_ms_candidate.Controllers
             command.Id = id;
 
             //handle
-            //var mockRepo = new MockRepository();
             var handler = new CandidateHandler(_candidateRepository);
             ICommandResult result = handler.Handle(command);
 
@@ -83,7 +82,7 @@ namespace black_list_ms_candidate.Controllers
         }
 
         [HttpDelete("id")]
-        public async Task<ActionResult> DeleteCandidate([FromHeader] Guid id)
+        public async Task<ActionResult> DeleteCandidateAsync([FromHeader] Guid id)
         {
             // create command
             var command = new DeleteCandidateCommand();
@@ -101,10 +100,27 @@ namespace black_list_ms_candidate.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult> UpdateCandidate([FromBody] Candidate candidate)
+        public async Task<ActionResult> UpdateCandidateAsync([FromBody] Candidate candidate)
         {
+            // validate infos
+            if (candidate == null)
+                return NotFound(new CommandResult(false, "candidate cannot be null"));
+            
             var command = new UpdateCandidateCommand();
-        }
+            command.Id = candidate.Id;
+            command.Name = candidate.Name;
+            command.IdMentor = candidate.IdMentor;
+            command.Email = candidate.Email;
+            command.Skills = candidate.Skills;
 
+            var handler = new CandidateHandler(_candidateRepository);
+            ICommandResult result = handler.Handle(command);
+
+            if (result != null && !((CommandResult)result).Success)
+                return BadRequest(result);
+
+            return Ok(result);
+
+        }
     }
 }

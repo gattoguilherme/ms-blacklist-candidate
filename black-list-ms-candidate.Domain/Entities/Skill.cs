@@ -8,6 +8,12 @@
 
         }
 
+        public Skill(string name)
+        {
+            Id_Skill = Guid.NewGuid();
+            Name = name;
+        }
+
         public Skill(Guid id, string name)
         {
             Id_Skill = id;
