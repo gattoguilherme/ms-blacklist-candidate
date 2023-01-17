@@ -30,15 +30,18 @@ namespace black_list_ms_candidate.Controllers
             var command = new CreateCandidateCommand();
             command.Name = candidate.Name;
             command.IdMentor = candidate.IdMentor;
-            command.BornDate = candidate.BornDate;
             command.Email = candidate.Email;
+            command.City = candidate.City;
+            command.Uf = candidate.Uf;
+            command.Condition = candidate.Condit;
+            command.Status = candidate.Status;
+            command.Score = candidate.Score;
+            command.PhoneNumber = candidate.PhoneNumber;
             command.Skills = candidate.Skills;
 
             //handle
-            //var mockRepo = new MockRepository();
             var handler = new CandidateHandler(_candidateRepository);
             ICommandResult result = handler.Handle(command);
-            // _unitOfWork.Commit();
 
             if (result != null && !((CommandResult)result).Success)
                 return BadRequest(result);
@@ -59,7 +62,7 @@ namespace black_list_ms_candidate.Controllers
             ICommandResult result = handler.Handle(command);
 
             if (result != null && !((CommandResult)result).Success)
-                return BadRequest(result);
+                return NotFound(result);
 
             return Ok(result);
         }
@@ -76,7 +79,7 @@ namespace black_list_ms_candidate.Controllers
             ICommandResult result = handler.Handle(command);
 
             if (result != null && !((CommandResult)result).Success)
-                return BadRequest(result);
+                return NotFound(result);
 
             return Ok(result);
         }
@@ -111,6 +114,12 @@ namespace black_list_ms_candidate.Controllers
             command.Name = candidate.Name;
             command.IdMentor = candidate.IdMentor;
             command.Email = candidate.Email;
+            command.City = candidate.City;
+            command.Uf = candidate.Uf;
+            command.Condition = candidate.Condit;
+            command.Status = candidate.Status;
+            command.Score = candidate.Score;
+            command.PhoneNumber = candidate.PhoneNumber;
             command.Skills = candidate.Skills;
 
             var handler = new CandidateHandler(_candidateRepository);

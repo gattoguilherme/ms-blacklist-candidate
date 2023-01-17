@@ -25,10 +25,16 @@ namespace black_list_ms_candidate.Domain.Handlers
             var name = command.Name;
             var email = command.Email;
             var idMentor = command.IdMentor;
+            var city = command.City;
+            var uf = command.Uf;
+            var condition= command.Condition;
+            var status = command.Status;
+            var score = command.Score;
+            var phoneNumber = command.PhoneNumber;
 
             try
             {
-                var candidate = new Candidate(name, idMentor, email);
+                var candidate = new Candidate(name, idMentor, email, city, uf, condition, status, score, phoneNumber);
 
                 if (command.Skills != null)
                     command.Skills.ToList().ForEach(skill => candidate.AddSkill(skill));
@@ -76,7 +82,7 @@ namespace black_list_ms_candidate.Domain.Handlers
             if (res == Guid.Empty)
                 return new CommandResult(false, $"Cannot delete candidate {command.Id }");
 
-            return new CommandResult(true, $"Customer {res} succesfully deleted");
+            return new CommandResult(true, $"Candidate {res} succesfully deleted");
         }
 
         public ICommandResult Handle(UpdateCandidateCommand command)
@@ -85,10 +91,16 @@ namespace black_list_ms_candidate.Domain.Handlers
             var name = command.Name;
             var email = command.Email;
             var idMentor = command.IdMentor;
+            var city = command.City;
+            var uf = command.Uf;
+            var condition = command.Condition;
+            var status = command.Status;
+            var score = command.Score;
+            var phoneNumber = command.PhoneNumber;
 
             try
             {
-                var candidate = new Candidate(id, name, idMentor, email);
+                var candidate = new Candidate(id, name, idMentor, email, city, uf, condition, status, score, phoneNumber);
 
                 if (command.Skills != null)
                     command.Skills.ToList().ForEach(skill => candidate.AddSkill(skill));

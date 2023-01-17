@@ -1,10 +1,5 @@
 ﻿using black_list_ms_candidate.Domain;
 using black_list_ms_candidate.Infrastructure.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ms_black_list_candidate.Tests.Fakes
 {
@@ -13,9 +8,9 @@ namespace ms_black_list_candidate.Tests.Fakes
         private readonly List<Candidate> _candidateList;
         public FakeCandidateRepository()
         {
-            var c1 = new Candidate("c1", Guid.NewGuid(), "c1@email.com");
-            var c2 = new Candidate("c2", Guid.NewGuid(), "c2@email.com");
-            var c3 = new Candidate(new Guid("25398c72-e488-4139-89fd-1c1d30b42307"), "c3", new Guid("10364234-c868-4b25-b99c-dba0755ade69"), "c3@email.com");
+            var c1 = new Candidate("c1", Guid.NewGuid(), "c1@email.com", "Santo André", "SP", "Estudante", true, 980, "12345678");
+            var c2 = new Candidate("c2", Guid.NewGuid(), "c2@email.com", "Santo André", "SP", "Estudante", true, 980, "12345678");
+            var c3 = new Candidate(new Guid("25398c72-e488-4139-89fd-1c1d30b42307"), "c3", new Guid("10364234-c868-4b25-b99c-dba0755ade69"), "c3@email.com", "Santo André", "SP", "Estudante", true, 980, "12345678");
 
             var s1 = new Skill("Backend");
             var s2 = new Skill("Frontend");
@@ -36,16 +31,16 @@ namespace ms_black_list_candidate.Tests.Fakes
 
         public Guid Delete(Guid id)
         {
-            var customerToBeRemoved = _candidateList.First(c => c.Id == id);
-            _candidateList.Remove(customerToBeRemoved);
+            var candidateToBeRemoved = _candidateList.First(c => c.Id == id);
+            _candidateList.Remove(candidateToBeRemoved);
 
-            return customerToBeRemoved.Id;
+            return candidateToBeRemoved.Id;
         }
 
         public Candidate Get(Guid id)
         {
-            var customerToBeReturned = _candidateList.FirstOrDefault(c => c.Id == id);
-            return customerToBeReturned;
+            var candidateToBeReturned = _candidateList.FirstOrDefault(c => c.Id == id);
+            return candidateToBeReturned;
         }
 
         public IList<Candidate> GetAll()

@@ -60,7 +60,7 @@ namespace ms_black_list_candidate.Tests.TestCases
             var httpResult = _controller.DeleteCandidateAsync(guidToBeDeleted);
 
             httpResult = _controller.GetCandidateAsync(guidToBeDeleted);
-            var value = (httpResult.Result as BadRequestObjectResult).Value as CommandResult;
+            var value = (httpResult.Result as NotFoundObjectResult).Value as CommandResult;
 
             Assert.True(!value.Success);
         }
@@ -71,7 +71,7 @@ namespace ms_black_list_candidate.Tests.TestCases
             // Arrange
             Guid guidCandidateToBeUpdated = new Guid("25398c72-e488-4139-89fd-1c1d30b42307");
             Guid guidMentorToBeUpdated = new Guid("10364234-c868-4b25-b99c-dba0755ade69");
-            Candidate candidateToBeUpdated = new Candidate(guidCandidateToBeUpdated, "c4", guidMentorToBeUpdated, "c4@email.com");
+            Candidate candidateToBeUpdated = new Candidate(guidCandidateToBeUpdated, "c4", guidMentorToBeUpdated, "c4@email.com", "Santo André", "SP", "Estudante", true, 980, "12345678");
             Skill skillCloud = new Skill("Cloud");
             candidateToBeUpdated.AddSkill(skillCloud);
 

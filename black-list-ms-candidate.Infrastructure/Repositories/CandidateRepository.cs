@@ -16,7 +16,7 @@ namespace black_list_ms_candidate.Infrastructure.Repositories
 
         public void Add(Candidate entity)
         {
-            var queryCandidate = $"INSERT INTO CANDIDATES VALUES (\"{entity.Id}\", \"{entity.Name}\", \"{entity.IdMentor}\", \"{entity.Email}\"); SELECT * FROM CANDIDATES WHERE ID=\"{entity.Id}\"";
+            var queryCandidate = $"INSERT INTO CANDIDATES VALUES (\"{entity.Id}\", \"{entity.Name}\", \"{entity.IdMentor}\", \"{entity.Email}\", \"{entity.City}\", \"{entity.Uf}\", \"{entity.Condit}\", {entity.Status}, {entity.Score}, \"{entity.PhoneNumber}\"); SELECT * FROM CANDIDATES WHERE ID=\"{entity.Id}\"";
             
             try
             {
@@ -39,6 +39,7 @@ namespace black_list_ms_candidate.Infrastructure.Repositories
             }
             catch (Exception e)
             {
+                throw new Exception(e.ToString());
                 Console.WriteLine(e.ToString());
             }
         }
@@ -46,26 +47,27 @@ namespace black_list_ms_candidate.Infrastructure.Repositories
         public void Update(Candidate entity)
         {
             var queryRemoveRelationship = $"DELETE FROM CANDIDATES_SKILLS WHERE ID_CANDIDATE = \"{entity.Id}\";";
-            var queryRemoveCustomer = $"DELETE FROM CANDIDATES WHERE ID = \"{entity.Id}\";";
-            var queryFull = string.Concat(queryRemoveRelationship, queryRemoveCustomer);
+            var queryRemoveCandidate = $"DELETE FROM CANDIDATES WHERE ID = \"{entity.Id}\";";
+            var queryFull = string.Concat(queryRemoveRelationship, queryRemoveCandidate);
 
             try
             {
                 // remove all
                 _session.Connection.Execute(queryFull, null, _session.Transaction);
 
-                // add as new customer but with the same guid
+                // add as new candidate but with the same guid
                 this.Add(entity);
             }
             catch (Exception e)
             {
+                throw new Exception(e.ToString());
                 Console.WriteLine(e.ToString());
             }
         }
 
         public Candidate Get(Guid id)
         {
-            var query = $"SELECT C.ID, C.NAME, C.IDMENTOR, C.EMAIL, S.ID_SKILL, S.NAME FROM CANDIDATES C LEFT JOIN CANDIDATES_SKILLS CS ON C.ID = CS.ID_CANDIDATE LEFT JOIN SKILLS S ON S.ID_SKILL = CS.ID_SKILL WHERE C.ID = \"{id}\"";
+            var query = $"SELECT C.ID, C.NAME, C.IDMENTOR, C.EMAIL, C.CITY, C.UF, C.CONDIT Condit, C.STATUS, C.SCORE, C.PHONENUMBER, S.ID_SKILL, S.NAME FROM CANDIDATES C LEFT JOIN CANDIDATES_SKILLS CS ON C.ID = CS.ID_CANDIDATE LEFT JOIN SKILLS S ON S.ID_SKILL = CS.ID_SKILL WHERE C.ID = \"{id}\"";
             try
             {
                 var candidates = _session.Connection.Query<Candidate, Skill, Candidate>(query, (candidate, skill) =>
@@ -90,7 +92,7 @@ namespace black_list_ms_candidate.Infrastructure.Repositories
                         skillsList.ForEach(skill => groupedCandidate.AddSkill(skill));
                         return groupedCandidate;
                     })
-                    .First();
+                    .FirstOrDefault();
 
                 return consolidatedCandidate;
             }
@@ -104,7 +106,7 @@ namespace black_list_ms_candidate.Infrastructure.Repositories
 
         public IList<Candidate> GetAll()
         {
-            var query = $"SELECT C.ID, C.NAME, C.IDMENTOR, C.EMAIL, S.ID_SKILL, S.NAME FROM CANDIDATES C LEFT JOIN CANDIDATES_SKILLS CS ON C.ID = CS.ID_CANDIDATE LEFT JOIN SKILLS S ON S.ID_SKILL = CS.ID_SKILL";
+            var query = $"SELECT C.ID, C.NAME, C.IDMENTOR, C.EMAIL, C.CITY, C.UF, C.CONDIT, C.STATUS, C.SCORE, C.PHONENUMBER, S.ID_SKILL, S.NAME FROM CANDIDATES C LEFT JOIN CANDIDATES_SKILLS CS ON C.ID = CS.ID_CANDIDATE LEFT JOIN SKILLS S ON S.ID_SKILL = CS.ID_SKILL";
             try
             {
                 var candidates = _session.Connection.Query<Candidate, Skill, Candidate>(query, (candidate, skill) =>
@@ -139,6 +141,9 @@ namespace black_list_ms_candidate.Infrastructure.Repositories
                     }
                 });
 
+                if (candidates.Count() == 0)
+                    return null;
+
                 List<Candidate> consolidatedCandidate = candidates
                     .GroupBy(c => c.Id)
                     .Select(g =>
@@ -160,7 +165,7 @@ namespace black_list_ms_candidate.Infrastructure.Repositories
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
-                return new List<Candidate>();
+                throw new Exception(e.ToString());
             }
         }
 
@@ -176,6 +181,7 @@ namespace black_list_ms_candidate.Infrastructure.Repositories
             }
             catch (Exception e)
             {
+                throw new Exception(e.ToString());
                 Console.WriteLine(e.ToString());
             }
 
