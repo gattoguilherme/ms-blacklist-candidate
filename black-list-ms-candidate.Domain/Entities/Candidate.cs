@@ -4,8 +4,26 @@ namespace black_list_ms_candidate.Domain
 {
     public class Candidate
     {
+        private string _phoneNumber;
+        private Guid _id;
+        private Guid _idMentor;
 
-        public Guid Id { get; set; }
+        public Guid Id
+        {
+            get
+            {
+                if (this._id == new Guid("00000000-0000-0000-0000-000000000000"))
+                    this._id = Guid.NewGuid();
+                return this._id;
+            }
+            set
+            {
+                if (value == new Guid("00000000-0000-0000-0000-000000000000"))
+                    this._id = Guid.NewGuid();
+                else
+                    this._id = value;
+            }
+        }
         public Guid IdMentor { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
@@ -20,12 +38,9 @@ namespace black_list_ms_candidate.Domain
             set { _phoneNumber = new string(value.Where(char.IsDigit).ToArray()); }
         }
 
-
-        private string _phoneNumber;
-
-        public IList<Skill> Skills 
-        { 
-            get { return this._skills?.ToArray();}
+        public IList<Skill> Skills
+        {
+            get { return this._skills?.ToArray(); }
             set { this._skills = value; }
         }
 

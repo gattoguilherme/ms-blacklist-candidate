@@ -26,7 +26,22 @@
             Name = name;
         }
 
-        public Guid Id_Skill { get; set; }
+        private Guid _id_Skill;
+        public Guid Id_Skill
+        {
+            get {
+                if (this._id_Skill == new Guid("00000000-0000-0000-0000-000000000000"))
+                    this._id_Skill = Guid.NewGuid();
+                return this._id_Skill;
+            }
+            set
+            {
+                if (value == new Guid("00000000-0000-0000-0000-000000000000"))
+                    this._id_Skill = Guid.NewGuid();
+                else
+                    this._id_Skill = value;
+            }
+        }
         public string Name { get; set; }
     }
 }
