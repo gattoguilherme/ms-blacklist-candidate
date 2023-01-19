@@ -2,6 +2,7 @@
 using black_list_ms_candidate.Domain.Commands;
 using black_list_ms_candidate.Domain.Handlers;
 using black_list_ms_candidate.Domain.Interfaces;
+using black_list_ms_candidate.Infrastructure.Events;
 using black_list_ms_candidate.Infrastructure.Interfaces;
 using black_list_ms_candidate.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -13,11 +14,13 @@ namespace black_list_ms_candidate.Controllers
     {
         private readonly IRepository<Candidate> _candidateRepository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly KafkaProducer _kafkaProducer;
 
-        public CandidateController(IRepository<Candidate> candidateRepository, IUnitOfWork unitOfWork)
+        public CandidateController(IRepository<Candidate> candidateRepository, IUnitOfWork unitOfWork, KafkaProducer kafkaProducer)
         {
             _candidateRepository = candidateRepository;
             _unitOfWork = unitOfWork;
+            _kafkaProducer = kafkaProducer;
         }
 
         [HttpPost]
@@ -46,6 +49,7 @@ namespace black_list_ms_candidate.Controllers
             if (result != null && !((CommandResult)result).Success)
                 return BadRequest(result);
 
+            this._kafkaProducer.StartAsync(candidate);
             return Ok(result);
         }
 
